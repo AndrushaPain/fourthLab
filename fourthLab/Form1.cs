@@ -32,9 +32,24 @@ namespace fourthLab
         {
             foreach (var particle in particles)
             {
-                var directionInRadians = particle.Direction / 180 * Math.PI;
-                particle.X += (float)(particle.Speed * Math.Cos(directionInRadians));
-                particle.Y -= (float)(particle.Speed * Math.Sin(directionInRadians));
+                particle.Life -= 1;
+                if (particle.Life < 0)
+                {
+                    // восстанавливаю здоровье
+                    particle.Life = 20 + Particle.rand.Next(100);
+                    // пермещаю частицу в центр
+                    particle.X = picDisplay.Image.Width / 2;
+                    particle.Y = picDisplay.Image.Height / 2;
+                    particle.Direction = Particle.rand.Next(360);
+                    particle.Speed = 1 + Particle.rand.Next(10);
+                    particle.Radius = 2 + Particle.rand.Next(10);
+                }
+                else
+                {
+                    var directionInRadians = particle.Direction / 180 * Math.PI;
+                    particle.X += (float)(particle.Speed * Math.Cos(directionInRadians));
+                    particle.Y -= (float)(particle.Speed * Math.Sin(directionInRadians));
+                }
             }
         }
 

@@ -15,6 +15,8 @@ namespace fourthLab
         public float Direction; // направление движения
         public float Speed; // скорость перемещения
 
+        public float Life; // запас здоровья частицы
+
         public static Random rand = new Random();
 
         // метод генерации частицы
@@ -24,8 +26,9 @@ namespace fourthLab
             {
                 Direction = rand.Next(360),
                 Speed = 1 + rand.Next(10),
-                Radius = 2 + rand.Next(10)
-            };
+                Radius = 2 + rand.Next(10),
+               Life = 10 + rand.Next(100),
+           };
         }
         public void Draw(Graphics g)
         {
