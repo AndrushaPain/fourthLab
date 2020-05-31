@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace fourthLab
 {
@@ -26,8 +27,8 @@ namespace fourthLab
             {
                 Direction = rand.Next(360),
                 Speed = 1 + rand.Next(10),
-                Radius = 2 + rand.Next(10),
-               Life = 10 + rand.Next(100),
+                Radius = 2 + rand.Next(20),
+               Life = 20 + rand.Next(100),
            };
         }
 
@@ -58,14 +59,37 @@ namespace fourthLab
             {
                 Direction = rand.Next(360),
                 Speed = 1 + rand.Next(10),
-                Radius = 2 + rand.Next(10),
+                Radius = 2 + rand.Next(20),
                 Life = 20 + rand.Next(100),
             };
         }
 
         public override void Draw(Graphics g)
         {
-            g.DrawImage(image, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+            float k = Math.Min(1f, Life / 100);
+
+            // матрица преобразования цвета
+            // типа аналога матрицы трансформации, но для цвета
+            ColorMatrix matrix = new ColorMatrix(new float[][]{
+            new float[] {1F, 0, 0, 0, 0}, // мультипликатор красного канала
+            new float[] {0, 1F, 0, 0, 0}, // мультипликатор зеленого канала
+            new float[] {0, 0, 1F, 0, 0}, // мультипликатор синего канала
+            new float[] {0, 0, 0, k, 0}, // мультипликатор альфа канала, сюда прозрачность пихаем
+            new float[] {0, 0, 0, 0, 1F}}); // а сюда пихаются то сколько мы хотим прибавить к каждому каналу
+
+            // эту матрицу пихают в атрибуты
+            ImageAttributes imageAttributes = new ImageAttributes();
+            imageAttributes.SetColorMatrix(matrix);
+
+            // ну и тут хитрый метод рисования
+            g.DrawImage(image,
+                // куда рисовать
+                new Rectangle((int)(X - Radius), (int)(Y - Radius), Radius * 2, Radius * 2),
+                // и какую часть исходного изображения брать, в нашем случае все изображения
+                0, 0, image.Width, image.Height,
+                GraphicsUnit.Pixel, // надо передать
+                imageAttributes // наши атрибуты с матрицей преобразования
+               );
         }
     }
 }

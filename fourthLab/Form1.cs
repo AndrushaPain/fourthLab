@@ -35,7 +35,7 @@ namespace fourthLab
                     particle.Y = MousePositionY;
                      particle.Direction = Particle.rand.Next(360);
                     particle.Speed = 1 + Particle.rand.Next(10);
-                    particle.Radius = 2 + Particle.rand.Next(10);
+                    particle.Radius = 2 + Particle.rand.Next(20);
                 }
                 else
                 {
@@ -47,20 +47,33 @@ namespace fourthLab
              Random random = new Random();
             for (var i = 0; i < 10; ++i)
             {
-                if (particles.Count < 500) // пока частиц менье 500 генерируем новые
+                if (particles.Count < 300) // пока частиц меньше 300 генерируем новые
                 {
                     var particle = ParticleImage.Generate();
-                    int candy =random.Next(1,5);
+                    int candy =random.Next(1,9);
                     switch (candy) {
                         case 1: particle.image = Properties.Resources.red;
+                           break;
+                        case 2:
+                            particle.image = Properties.Resources.green;
                             break;
-                        case 2: particle.image = Properties.Resources.green;
+                        case 3:
+                            particle.image = Properties.Resources.blue;
                             break;
-                        case 3: particle.image = Properties.Resources.blue;
+                        case 4:
+                            particle.image = Properties.Resources.turquoise;
                             break;
-                        case 4: particle.image = Properties.Resources.turquoise;
+                        case 5:
+                            particle.image = Properties.Resources.purple;
                             break;
-                        case 5: particle.image = Properties.Resources.purple;
+                        case 6:
+                            particle.image = Properties.Resources.heart;
+                            break;
+                        case 7:
+                            particle.image = Properties.Resources.stick;
+                            break;
+                        case 8:
+                            particle.image = Properties.Resources.lolipop;
                             break;
                     }
 
@@ -89,7 +102,7 @@ namespace fourthLab
             UpdateState();
             using (var g = Graphics.FromImage(picDisplay.Image))
             {
-                g.Clear(Color.White);
+                g.Clear(Color.Transparent);
                 Render(g);
             }
             picDisplay.Invalidate();
