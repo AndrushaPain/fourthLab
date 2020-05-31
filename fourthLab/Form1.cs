@@ -27,5 +27,20 @@ namespace fourthLab
                 particles.Add(particle);
             }
         }
+
+        int counter = 0;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            counter++; // увеличиваю значение счетчика каждый вызов
+            using (var g = Graphics.FromImage(picDisplay.Image))
+            {
+                g.Clear(Color.White);
+                foreach (var particle in particles)
+                {
+                    particle.Draw(g);
+                }
+            }
+            picDisplay.Invalidate();
+        }
     }
 }
