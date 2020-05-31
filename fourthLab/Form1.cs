@@ -22,6 +22,7 @@ namespace fourthLab
 
         private void UpdateState()
         {
+            
             foreach (var particle in particles)
             {
                 particle.Life -= 1;
@@ -43,11 +44,27 @@ namespace fourthLab
                     particle.Y -= (float)(particle.Speed * Math.Sin(directionInRadians));
                 }
             }
+             Random random = new Random();
             for (var i = 0; i < 10; ++i)
             {
                 if (particles.Count < 500) // пока частиц менье 500 генерируем новые
                 {
-                    var particle = Particle.Generate();
+                    var particle = ParticleImage.Generate();
+                    int candy =random.Next(1,5);
+                    switch (candy) {
+                        case 1: particle.image = Properties.Resources.red;
+                            break;
+                        case 2: particle.image = Properties.Resources.green;
+                            break;
+                        case 3: particle.image = Properties.Resources.blue;
+                            break;
+                        case 4: particle.image = Properties.Resources.turquoise;
+                            break;
+                        case 5: particle.image = Properties.Resources.purple;
+                            break;
+                    }
+
+                 //   particle.image = Properties.Resources.red;
                     particle.X = MousePositionX;
                     particle.Y = MousePositionY;
                     particles.Add(particle);

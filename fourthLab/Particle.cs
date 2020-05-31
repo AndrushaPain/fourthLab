@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace fourthLab
 {
-    class Particle
+     public class Particle
     {
         public int Radius; // радуис частицы
         public float X; // X координата положения частицы в пространстве
@@ -30,7 +30,8 @@ namespace fourthLab
                Life = 10 + rand.Next(100),
            };
         }
-        public void Draw(Graphics g)
+
+        public virtual void Draw(Graphics g)
         {
             float k = Math.Min(1f, Life / 100);
             // рассчитываем значение альфа канала в шкале от 0 до 255
@@ -45,6 +46,26 @@ namespace fourthLab
 
             // удалили кисть из памяти
             b.Dispose();
+        }
+    }
+    public class ParticleImage : Particle
+    {
+        public Image image;
+
+        public new static ParticleImage Generate()
+        {
+            return new ParticleImage
+            {
+                Direction = rand.Next(360),
+                Speed = 1 + rand.Next(10),
+                Radius = 2 + rand.Next(10),
+                Life = 20 + rand.Next(100),
+            };
+        }
+
+        public override void Draw(Graphics g)
+        {
+            g.DrawImage(image, X - Radius, Y - Radius, Radius * 2, Radius * 2);
         }
     }
 }
