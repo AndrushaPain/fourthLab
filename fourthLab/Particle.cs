@@ -15,7 +15,6 @@ namespace fourthLab
         public float Y; // Y координата положения частицы в пространстве
         public float Direction; // направление движения
         public float Speed; // скорость перемещения
-
         public float Life; // запас здоровья частицы
 
         public static Random rand = new Random();
@@ -35,25 +34,17 @@ namespace fourthLab
         public virtual void Draw(Graphics g)
         {
             float k = Math.Min(1f, Life / 100);
-            // рассчитываем значение альфа канала в шкале от 0 до 255
-            // по аналогии с RGB, он используется для задания прозрачности
             int alpha = (int)(k * 255);
-
-            // создаем цвет из уже существующего, но привязываем к нему еще и значение альфа канала
             var color = Color.FromArgb(alpha, Color.Black);
             var b = new SolidBrush(color);
-            // нарисовали залитый кружок радиусом Radius с центром в X, Y
             g.FillEllipse(b, X - Radius, Y - Radius, Radius * 2, Radius * 2);
-
-            // удалили кисть из памяти
             b.Dispose();
         }
     }
     public class ParticleImage : Particle
     {
         public Image image;
-
-        public new static ParticleImage Generate()
+         public new static ParticleImage Generate()
         {
             return new ParticleImage
             {
@@ -67,7 +58,6 @@ namespace fourthLab
         public override void Draw(Graphics g)
         {
             float k = Math.Min(1f, Life / 100);
-
             // матрица преобразования цвета
             // типа аналога матрицы трансформации, но для цвета
             ColorMatrix matrix = new ColorMatrix(new float[][]{
@@ -75,13 +65,11 @@ namespace fourthLab
             new float[] {0, 1F, 0, 0, 0}, // мультипликатор зеленого канала
             new float[] {0, 0, 1F, 0, 0}, // мультипликатор синего канала
             new float[] {0, 0, 0, k, 0}, // мультипликатор альфа канала, сюда прозрачность пихаем
-            new float[] {0, 0, 0, 0, 1F}}); // а сюда пихаются то сколько мы хотим прибавить к каждому каналу
-
-            // эту матрицу пихают в атрибуты
+            new float[] {0, 0, 0, 0, 1F}}); // а сюда добавляется то сколько мы хотим прибавить к каждому каналу
+                       
             ImageAttributes imageAttributes = new ImageAttributes();
             imageAttributes.SetColorMatrix(matrix);
-
-            // ну и тут хитрый метод рисования
+            // метод рисования
             g.DrawImage(image,
                 // куда рисовать
                 new Rectangle((int)(X - Radius), (int)(Y - Radius), Radius * 2, Radius * 2),
@@ -95,7 +83,6 @@ namespace fourthLab
     public abstract class EmiterBase
     {
         List<Particle> particles = new List<Particle>();
-
         // количество частиц эмитера храним в переменной
         int particleCount = 0;
         // и отдельной свойство которое возвращает количество частиц
@@ -109,21 +96,17 @@ namespace fourthLab
             {
                 // при изменении этого значения
                 particleCount = value;
-                // удаляем лишние частицы если вдруг
+                // удаляем лишние частицы 
                 if (value < particles.Count)
                 {
                     particles.RemoveRange(value, particles.Count - value);
                 }
             }
         }
-
-        // три абстрактных метода мы их переопределим позже
         public abstract void ResetParticle(Particle particle);
         public abstract void UpdateParticle(Particle particle);
         public abstract Particle CreateParticle();
-
-        // тут общая логика обновления состояния эмитера
-        // по сути копипаста
+        // тут общая логика обновления состояния эмитера  
         public void UpdateState()
         {
             foreach (var particle in particles)
@@ -166,36 +149,7 @@ namespace fourthLab
 
         public override Particle CreateParticle()
         {
-            var particle = ParticleImage.Generate();
-            Random random = new Random();
-            int candy = random.Next(1, 9);
-            switch (candy)
-            {
-                case 1:
-                    particle.image = Properties.Resources.red;
-                    break;
-                case 2:
-                    particle.image = Properties.Resources.green;
-                    break;
-                case 3:
-                    particle.image = Properties.Resources.blue;
-                    break;
-                case 4:
-                    particle.image = Properties.Resources.turquoise;
-                    break;
-                case 5:
-                    particle.image = Properties.Resources.purple;
-                    break;
-                case 6:
-                    particle.image = Properties.Resources.heart;
-                    break;
-                case 7:
-                    particle.image = Properties.Resources.stick;
-                    break;
-                case 8:
-                    particle.image = Properties.Resources.lolipop;
-                    break;
-            }
+            var particle = Particle.Generate();
             particle.X = Position.X;
             particle.Y = Position.Y;
             return particle;
@@ -222,9 +176,6 @@ namespace fourthLab
     {
         public int Direction = 0; // направление частиц
         public int Spread = 10; // разброс частиц
-        public Color FromColor = Color.Yellow; // исходный цвет
-        public Color ToColor = Color.Magenta; // конечный цвет
-
         public override Particle CreateParticle()
         {
             var particle = ParticleImage.Generate();
@@ -258,7 +209,6 @@ namespace fourthLab
                     break;
             }
             particle.Direction = this.Direction + Particle.rand.Next(-Spread / 2, Spread / 2);
-
             particle.X = Position.X;
             particle.Y = Position.Y;
             return particle;
@@ -266,16 +216,13 @@ namespace fourthLab
 
         public override void ResetParticle(Particle particle)
         {
-            var particleColorful = particle as ParticleImage;
-            if (particleColorful != null)
+            if (particle != null)
             {
-                particleColorful.Life = 20 + Particle.rand.Next(100);
-                particleColorful.Speed = 1 + Particle.rand.Next(10);
-                             
-                particleColorful.Direction = this.Direction + Particle.rand.Next(-Spread / 2, Spread / 2);
-
-                particleColorful.X = Position.X;
-                particleColorful.Y = Position.Y;
+                particle.Life = 20 + Particle.rand.Next(100);
+                particle.Speed = 1 + Particle.rand.Next(10);
+                particle.Direction = this.Direction + Particle.rand.Next(-Spread / 2, Spread / 2);
+                particle.X = Position.X;
+                particle.Y = Position.Y;
             }
         }
     }

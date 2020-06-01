@@ -105,7 +105,7 @@
             this.Controls.Add(this.tbSpread);
             this.Controls.Add(this.tbDirection);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Генератор конфеток на фоне котиков";
             ((System.ComponentModel.ISupportInitialize)(this.picDisplay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbDirection)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbSpread)).EndInit();

@@ -12,7 +12,6 @@ namespace fourthLab
 {
     public partial class Form1 : Form
     {
-        // List<Particle> particles = new List<Particle>();
         DirectionEmiter emiter;
         public Form1()
         {
@@ -24,7 +23,6 @@ namespace fourthLab
                 Position = new Point(picDisplay.Width / 2, picDisplay.Height / 2)
             };
         }
-
         private void UpdateState()
         {
             emiter.UpdateState();
@@ -47,8 +45,7 @@ namespace fourthLab
         }
 
         private void picDisplay_MouseMove(object sender, MouseEventArgs e)
-        {
-            
+        {          
         }
 
         private void tbDirection_Scroll(object sender, EventArgs e)
