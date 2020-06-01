@@ -92,4 +92,191 @@ namespace fourthLab
                );
         }
     }
+    public abstract class EmiterBase
+    {
+        List<Particle> particles = new List<Particle>();
+
+        // количество частиц эмитера храним в переменной
+        int particleCount = 0;
+        // и отдельной свойство которое возвращает количество частиц
+        public int ParticlesCount
+        {
+            get
+            {
+                return particleCount;
+            }
+            set
+            {
+                // при изменении этого значения
+                particleCount = value;
+                // удаляем лишние частицы если вдруг
+                if (value < particles.Count)
+                {
+                    particles.RemoveRange(value, particles.Count - value);
+                }
+            }
+        }
+
+        // три абстрактных метода мы их переопределим позже
+        public abstract void ResetParticle(Particle particle);
+        public abstract void UpdateParticle(Particle particle);
+        public abstract Particle CreateParticle();
+
+        // тут общая логика обновления состояния эмитера
+        // по сути копипаста
+        public void UpdateState()
+        {
+            foreach (var particle in particles)
+            {
+                particle.Life -= 1;
+                if (particle.Life < 0)
+                {
+                    ResetParticle(particle);
+                }
+                else
+                {
+                    UpdateParticle(particle);
+                }
+            }
+
+            for (var i = 0; i < 10; ++i)
+            {
+                if (particles.Count < 300)
+                {
+                    particles.Add(CreateParticle());
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        public void Render(Graphics g)
+        {
+            foreach (var particle in particles)
+            {
+                particle.Draw(g);
+            }
+        }
+    }
+    public class PointEmiter : EmiterBase
+    {
+        public Point Position;
+
+        public override Particle CreateParticle()
+        {
+            var particle = ParticleImage.Generate();
+            Random random = new Random();
+            int candy = random.Next(1, 9);
+            switch (candy)
+            {
+                case 1:
+                    particle.image = Properties.Resources.red;
+                    break;
+                case 2:
+                    particle.image = Properties.Resources.green;
+                    break;
+                case 3:
+                    particle.image = Properties.Resources.blue;
+                    break;
+                case 4:
+                    particle.image = Properties.Resources.turquoise;
+                    break;
+                case 5:
+                    particle.image = Properties.Resources.purple;
+                    break;
+                case 6:
+                    particle.image = Properties.Resources.heart;
+                    break;
+                case 7:
+                    particle.image = Properties.Resources.stick;
+                    break;
+                case 8:
+                    particle.image = Properties.Resources.lolipop;
+                    break;
+            }
+            particle.X = Position.X;
+            particle.Y = Position.Y;
+            return particle;
+        }
+
+        public override void ResetParticle(Particle particle)
+        {
+            particle.Life = 20 + Particle.rand.Next(100);
+            particle.Speed = 1 + Particle.rand.Next(10);
+            particle.Direction = Particle.rand.Next(360);
+            particle.Radius = 2 + Particle.rand.Next(20);
+            particle.X = Position.X;
+            particle.Y = Position.Y;
+        }
+
+        public override void UpdateParticle(Particle particle)
+        {
+            var directionInRadians = particle.Direction / 180 * Math.PI;
+            particle.X += (float)(particle.Speed * Math.Cos(directionInRadians));
+            particle.Y -= (float)(particle.Speed * Math.Sin(directionInRadians));
+        }
+    }
+    public class DirectionEmiter : PointEmiter
+    {
+        public int Direction = 0; // направление частиц
+        public int Spread = 10; // разброс частиц
+        public Color FromColor = Color.Yellow; // исходный цвет
+        public Color ToColor = Color.Magenta; // конечный цвет
+
+        public override Particle CreateParticle()
+        {
+            var particle = ParticleImage.Generate();
+            Random random = new Random();
+            int candy = random.Next(1, 9);
+            switch (candy)
+            {
+                case 1:
+                    particle.image = Properties.Resources.red;
+                    break;
+                case 2:
+                    particle.image = Properties.Resources.green;
+                    break;
+                case 3:
+                    particle.image = Properties.Resources.blue;
+                    break;
+                case 4:
+                    particle.image = Properties.Resources.turquoise;
+                    break;
+                case 5:
+                    particle.image = Properties.Resources.purple;
+                    break;
+                case 6:
+                    particle.image = Properties.Resources.heart;
+                    break;
+                case 7:
+                    particle.image = Properties.Resources.stick;
+                    break;
+                case 8:
+                    particle.image = Properties.Resources.lolipop;
+                    break;
+            }
+            particle.Direction = this.Direction + Particle.rand.Next(-Spread / 2, Spread / 2);
+
+            particle.X = Position.X;
+            particle.Y = Position.Y;
+            return particle;
+        }
+
+        public override void ResetParticle(Particle particle)
+        {
+            var particleColorful = particle as ParticleImage;
+            if (particleColorful != null)
+            {
+                particleColorful.Life = 20 + Particle.rand.Next(100);
+                particleColorful.Speed = 1 + Particle.rand.Next(10);
+                             
+                particleColorful.Direction = this.Direction + Particle.rand.Next(-Spread / 2, Spread / 2);
+
+                particleColorful.X = Position.X;
+                particleColorful.Y = Position.Y;
+            }
+        }
+    }
 }
