@@ -57,7 +57,7 @@
             this.ClientSize = new System.Drawing.Size(977, 610);
             this.Controls.Add(this.picDisplay);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Генератор конфеток на фоне котиков";
             ((System.ComponentModel.ISupportInitialize)(this.picDisplay)).EndInit();
             this.ResumeLayout(false);
 
